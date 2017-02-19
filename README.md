@@ -2,22 +2,7 @@
 - 계속해서 앱의 기능을 추가하던중 모든 프래그먼트와 액티비티들이 지속해서 DBHelper를 접근하는 것을 알 수 있었다.
 -----
 **데이터의 흐름**
-``` @mermaid
-graph LR
-MainActivity --> ListFragment
-ListFragment --> ListAdapter
-ListFragment --> DBHelper
-DBHelper --> ListFragment
-ListAdapter --> ListAdapter.ViewHolder
-MainActivity --> EditFragment
-MainActivity --> DBHelper
-DBHelper --> MainActivity
-EditFragment --> DBHelper
-DBHelper-->EditFragment
-DBLogFragment --> MainActivity
-MainActivity --> DBLogFragment
-EditFragment --> DBLogFragment
-```
+![그래프1](http://i.imgur.com/AFoOayy.png)
 이런 상황이라면 카메라를 추가하거나 새로운 액티비티, 프래그먼트를 추가할 경우 더 힘들어질 것이라고 판단하여 리빌딩을 해봤다. 그전에 내가 만든 클래스와 그 안에 주요 매소드들이 어떤 것이 있고 어떻게 접근을 해야할지 정리해보았다.
 ## Memo의 구조
 
@@ -130,31 +115,8 @@ EditFragment --> DBLogFragment
 *클래스와 매소드들을 한번씩 다시 둘러보며 새로운 데이터흐름을 빌딩해봤다.*
 
 #### **New 데이터의 흐름**
-``` @mermaid
-graph LR
-MainActivity --> ListFragment
-ListFragment --> ListAdapter
-ListAdapter --> ListAdapter.ViewHolder
-MainActivity --> EditFragment
-MainActivity --> DBHelper
-DBHelper --> MainActivity
+![그래프2](http://i.imgur.com/qwG7oYm.png)
+MainActivity에 DBHelper의 리스너를 구현해서 오로지 MainActivity를 통해서 Memo의 데이터에 접근할 수 있도록 설정 하였다. 다음으로 메모를 카드뷰에 저장하고 카드뷰를 클릭했을때 작성했던 내용을 로드할 액티비티가 필요했다.그래서 새로운 Activity Class를 생성하였다. 위에서 잠깐 언급했던 MemoPageActivity이다. 그러나 문제가 생겼다. MemoPageActivity에서 MainActivity클래스의 메모를 접근할 수 없었다.그 결과 아래의 데이터 흐름이 완성되었다.
 
-```
-MainActivity에 DBHelper의 리스너를 구현해서 오로지 MainActivity를 통해서 Memo의 데이터에 접근할 수 있도록 설정 하였다. 다음으로 메모를 카드뷰에 저장하고 카드뷰를 클릭했을때 작성했던 내용을 로드할 액티비티가 필요했다.그래서 새로운 Activity Class를 생성하였다. 위에서 잠깐 언급했던 MemoPageActivity이다. 그러나 문제가 생겼다. MemoPageActivity에서 MainActivity클래스의 메모를 접근할 수 없었다.
-그 결과 아래의 데이터 흐름이 완성되었다.
-
-**신신 데이터의 흐름**
-``` @mermaid
-graph LR
-MemoPageActivity
-MainActivity --> DBLogFragment
-MainActivity --> ListFragment
-ListFragment --> ListAdapter
-ListAdapter --> ListAdapter.ViewHolder
-MainActivity --> EditFragment
-MainActivity --> DBHelper
-DBHelper --> MainActivity
-MemoPageActivity  --> DBHelper
-DBHelper --> MemoPageActivity
-
-```
+**데이터의 흐름 ver.2**
+![그래프3](http://i.imgur.com/HCpnjne.png)
