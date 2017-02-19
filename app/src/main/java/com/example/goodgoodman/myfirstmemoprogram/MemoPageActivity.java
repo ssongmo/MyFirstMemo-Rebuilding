@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,23 +16,28 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MemoPageActivity extends AppCompatActivity {
 
+
+
     Dao<Memo, Integer> memoDao;
-    //List<Memo> datas;
+    List<Memo> datas;
     ImageButton btnSave;
     ImageButton btnDelete;
     EditText editTxtMemo;
+    int memoID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_page);
 
-        btnSave = (ImageButton)findViewById(R.id.btnSaveIn);
+        btnSave = (ImageButton) findViewById(R.id.btnSaveIn);
         btnDelete = (ImageButton) findViewById(R.id.btnDeleteIn);
         editTxtMemo = (EditText) findViewById(R.id.callMemo);
 
@@ -45,9 +51,9 @@ public class MemoPageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        int memoID = getIntent().getExtras().getInt("id");
-
+        memoID = getIntent().getExtras().getInt("id"); //memoId 가져오기.
         Memo memo;
+
         try {
             memo = memoDao.queryForId(memoID);
         } catch (SQLException e) {
@@ -60,14 +66,12 @@ public class MemoPageActivity extends AppCompatActivity {
         editTxtMemo.setText(memo.getMemo());
 
 
-        MainActivity.MAIN_ACTIVITY.CreateMemo(memo);
     }
-
 
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btnSaveIn:
                     Toast.makeText(MemoPageActivity.this, "수정 완료", Toast.LENGTH_SHORT).show();
                     break;
@@ -76,6 +80,8 @@ public class MemoPageActivity extends AppCompatActivity {
                     builder.setTitle("삭제 하시겠습니까?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            MainActivity.MAIN_ACTIVITY.DeletaMemo(memoID);
+                            finish();
                             Toast.makeText(MemoPageActivity.this, "삭제 완료", Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -90,4 +96,5 @@ public class MemoPageActivity extends AppCompatActivity {
             }
         }
     };
+
 }

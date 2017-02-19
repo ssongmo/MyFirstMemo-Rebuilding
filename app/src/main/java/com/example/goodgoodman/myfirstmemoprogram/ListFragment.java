@@ -73,9 +73,22 @@ public class ListFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onDBCreated(Memo createdMemo) {
                 //갱신
-                Toast.makeText(getActivity(), "DataCreated", Toast.LENGTH_SHORT).show();
                 datas.add(createdMemo);
                 setData(datas);
+                refreshAdapter();
+            }
+
+            @Override
+            public void onDBDeleted(int id) {
+                Memo removedMemo = null;
+                for (Memo memo : datas) {
+                    if(memo.getId() == id) {
+                        removedMemo = memo;
+                    }
+                }
+                datas.remove(removedMemo);
+                setData(datas);
+                refreshAdapter();
             }
         });
 

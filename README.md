@@ -120,3 +120,8 @@ MainActivity에 DBHelper의 리스너를 구현해서 오로지 MainActivity를 
 
 **데이터의 흐름 ver.2**
 ![그래프3](http://i.imgur.com/HCpnjne.png)
+
+
+-------------
+위의 데이터 흐름을 통해 카드뷰에서 바로 삭제 가능하도록 삭제 기능 추가.
+카드뷰안에 MemoPage에서도 삭제 가능하도록 삭제 기능 추가. (2/20)

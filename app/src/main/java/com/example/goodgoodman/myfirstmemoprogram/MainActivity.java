@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements EditInterface {
+    //Warning! : 반드시 추후에 Listener를 가진 DBManager로 만들 것.ㄴ
     public static MainActivity MAIN_ACTIVITY;
+    //~Warning
+
     // 탭 및 페이저 속성 정의
     final int TAB_COUNT = 2;
     // 현재 페이지
@@ -53,6 +56,15 @@ public class MainActivity extends AppCompatActivity implements EditInterface {
         MAIN_ACTIVITY = this;
 
         setContentView(R.layout.activity_main);
+
+
+
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+        try {
+            memoDao = dbHelper.getMemoDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // 프래그먼트
         list = new ListFragment();
@@ -103,14 +115,6 @@ public class MainActivity extends AppCompatActivity implements EditInterface {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
-    public void loadData() throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-        memoDao = dbHelper.getMemoDao();
-        datas = memoDao.queryForAll();
-
-    }
-    // 목록 프래그먼트 FrameLayout 에 add
-
     @Override
     public void backToList() {
 
@@ -121,12 +125,10 @@ public class MainActivity extends AppCompatActivity implements EditInterface {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         memoDao = dbHelper.getMemoDao();
         //memoDao.create(memo);
-        loadData();
-        list.setData(datas);
-        list.refreshAdapter();
-        viewPager.setCurrentItem(1);
-
-
+        datas = memoDao.queryForAll();
+  //      list.setData(datas);
+ //       list.refreshAdapter();
+//        viewPager.setCurrentItem(1);
 //        manager = getSupportFragmentManager();
 //        FragmentTransaction transaction = manager.beginTransaction();
 //        transaction.add( R.id.activity_main, list );
@@ -191,6 +193,18 @@ public class MainActivity extends AppCompatActivity implements EditInterface {
         */
     }
 
+    //MainActivity
+    public void DeletaMemo(int id) {
+        try {
+            memoDao.deleteById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (DBListener listener : dbListeners) {
+            listener.onDBDeleted(id);
+        }
+    }
 
     public void CreateMemo(Memo memo) {
         try {
@@ -213,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements EditInterface {
     //TODO: 테스트 코드입니다, 추후 수정예정
     public interface DBListener {
         void onDBCreated(Memo createdMemo);
+        void onDBDeleted(int id);
     }
     //~테스트코드
 

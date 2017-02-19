@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class EditFragment extends Fragment implements View.OnClickListener{
+public class EditFragment extends Fragment implements View.OnClickListener {
 
     EditInterface editInterface = null;
     Context context = null;
@@ -48,9 +48,9 @@ public class EditFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit, container, false);
-        btnSave = (Button)view.findViewById(R.id.btnSave);
-        btnCamera = (ImageButton)view.findViewById(R.id.btnCamera);
-        editMemo = (EditText)view.findViewById(R.id.editMemo);
+        btnSave = (Button) view.findViewById(R.id.btnSave);
+        btnCamera = (ImageButton) view.findViewById(R.id.btnCamera);
+        editMemo = (EditText) view.findViewById(R.id.editMemo);
 
         btnSave.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
@@ -68,7 +68,7 @@ public class EditFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-        this.editInterface = (EditInterface)context;
+        this.editInterface = (EditInterface) context;
     }
 
     @Override
@@ -77,45 +77,41 @@ public class EditFragment extends Fragment implements View.OnClickListener{
     }
 
 
-
     @Override
     public void onClick(View v) {
         //준무테스트
 
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnSave:
-               try {
-                    Memo memo = new Memo();
-                    String saveText = editMemo.getText().toString();
-                    editMemo.setText("");
-                    memo.setMemo(saveText);
-                    memo.setDate(new Date(System.currentTimeMillis()));
-                    editInterface.saveToList(memo);
-                    ((MainActivity)getActivity()).CreateMemo(memo);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            break;
+                Memo memo = new Memo();
+                String saveText = editMemo.getText().toString();
+                editMemo.setText("");
+                memo.setMemo(saveText);
+                memo.setDate(new Date(System.currentTimeMillis()));
+                //editInterface.saveToList(memo);
+                ((MainActivity) getActivity()).CreateMemo(memo);
+                ((MainActivity) getActivity()).viewPager.setCurrentItem(1);
+                //viewPager.setCurrentItem(1);
+                break;
 
             case R.id.btnCamera:
-
                 final String items[] = {"카메라", "앨범"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       switch (id){
-                           case 0:
-                               Toast.makeText(context, "Camera", Toast.LENGTH_SHORT).show();
-                               //카메라 로직 호출
-                               break;
-                           case 1:
-                               Toast.makeText(context, "Album", Toast.LENGTH_SHORT).show();
-                               //앨범 로직 호출
-                               break;
+                        switch (id) {
+                            case 0:
+                                Toast.makeText(context, "Camera", Toast.LENGTH_SHORT).show();
+                                //카메라 로직 호출
+                                break;
+                            case 1:
+                                Toast.makeText(context, "Album", Toast.LENGTH_SHORT).show();
+                                //앨범 로직 호출
+                                break;
 
-                       }
+                        }
 
                         dialog.dismiss();
                     }

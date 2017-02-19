@@ -94,7 +94,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(context, "삭제완료!", Toast.LENGTH_SHORT).show();
-
+                                //Warning: ㅠㅠ
+                                MainActivity.MAIN_ACTIVITY.DeletaMemo(memoID);
+                                //~Warning: ㅠㅠ
                             }
                         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override

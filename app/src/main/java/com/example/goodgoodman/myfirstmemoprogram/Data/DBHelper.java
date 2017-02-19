@@ -44,14 +44,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
 
-
-
-
-
-
-
-
-
     // DBHelper 를 싱글턴으로 사용하기 때문에 dao 객체도 열어놓고 사용가능하다
     private Dao<Memo, Integer> memoDao = null;
     public Dao<Memo, Integer> getMemoDao() throws SQLException {
